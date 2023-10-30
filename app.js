@@ -1,18 +1,24 @@
 const express = require('express')
 const app = express()
 
-const postsController = require('./controllers/postsController')
+const db = require('./config/db.js')
 
-app.use(express.json())
-
-// const posts = require('./routes/posts.js')
+const postRouter = require('./routes/postRoute')
 
 require('dotenv').config()
 
-// define the routes
-app.post('/posts', postsController.createPost)
+app.use(express.json())
 
-app.get('/posts', postsController.getPosts)
+db.authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.')
+  })
+  .catch((error) => {
+    console.error('Unable to connect to the database:', error)
+  })
+
+// Routes
+app.use(process.env.API_BASE, postRouter)
 
 let port = process.env.PORT || 3001
 
