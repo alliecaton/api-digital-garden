@@ -7,9 +7,7 @@ exports.getPosts = async (req, res) => {
     })
 
     if (data) {
-      const json = res.json(data.rows)
-
-      res.send(json)
+      res.send(data.rows)
     }
   } catch (e) {
     console.error(e.message)
@@ -23,11 +21,26 @@ exports.getPost = async (req, res) => {
     const data = await models.Post.findByPk(id)
 
     if (data) {
-      const json = res.json(data.dataValues)
-
-      res.send(json)
+      res.send(data.dataValues)
     }
   } catch (e) {
     console.error(e.message)
+  }
+}
+
+exports.createPost = async (req, res) => {
+  const { title, content } = req.body
+
+  try {
+    const data = await models.Post.create(
+      { title: title, content: content },
+      { isNewRecord: true }
+    )
+
+    if (data) {
+      res.json(data)
+    }
+  } catch (e) {
+    console.error(e)
   }
 }
