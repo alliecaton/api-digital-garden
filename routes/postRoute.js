@@ -5,8 +5,6 @@ const controller = require('../controllers/postController')
 
 router.get('/posts', controller.getPosts)
 
-// router.get('/posts/:slug', (req, res) => {
-//   res.send('A post based on slug')
-// })
+router.get('/posts/:id', controller.getPost)
 
 module.exports = router

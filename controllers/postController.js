@@ -11,7 +11,23 @@ exports.getPosts = async (req, res) => {
 
       res.send(json)
     }
-  } catch (err) {
-    console.error(err.message)
+  } catch (e) {
+    console.error(e.message)
+  }
+}
+
+exports.getPost = async (req, res) => {
+  const { id } = req.params
+
+  try {
+    const data = await models.Post.findByPk(id)
+
+    if (data) {
+      const json = res.json(data.dataValues)
+
+      res.send(json)
+    }
+  } catch (e) {
+    console.error(e.message)
   }
 }
