@@ -1,9 +1,10 @@
-const db = require('../config/db')
-const postService = require('../services/postService')
+const models = require('../models')
 
 exports.getPosts = async (req, res) => {
   try {
-    const data = await postService.getPosts()
+    const data = await models.Post.findAndCountAll({
+      order: [['updatedAt', 'DESC']],
+    })
 
     if (data) {
       const json = res.json(data.rows)
