@@ -9,6 +9,10 @@ router.get('/posts', controller.getPosts)
 
 router.get('/posts/:id', controller.getPost)
 
-router.post('/post', [verifyJwt], controller.createPost)
+router.post('/posts', [verifyJwt], controller.createPost)
+
+router.put('/posts/:id', [verifyJwt], controller.updatePost)
+
+router.delete('/posts/:id', [verifyJwt], controller.deletePost)
 
 module.exports = router
