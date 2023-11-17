@@ -17,10 +17,15 @@ exports.getPosts = async (req, res) => {
 }
 
 exports.getPost = async (req, res) => {
-  const { id } = req.params
+  console.log(req.params)
+  const { id: slug } = req.params
 
   try {
-    const data = await Post.findByPk(id)
+    const data = await Post.findOne({
+      where: {
+        slug: slug,
+      },
+    })
 
     if (data) {
       res.send(data.dataValues)
@@ -34,8 +39,10 @@ exports.createPost = async (req, res) => {
   const { title, content } = req.body
 
   try {
+    const slug = title.toLowerCase().replace(/\s+/g, '-')
+
     const data = await Post.create(
-      { title: title, content: content },
+      { title: title, content: content, slug: slug },
       { isNewRecord: true },
       {
         returning: true,
@@ -51,14 +58,13 @@ exports.createPost = async (req, res) => {
 }
 
 exports.updatePost = async (req, res) => {
-  console.log(req.params)
   const { title, content } = req.body
-  const { id } = req.params
+  const { id: slug } = req.params
 
   try {
     const data = await Post.update(
       { title: title, content: content },
-      { returning: true, where: { id: id } }
+      { returning: true, where: { slug: slug } }
     )
 
     if (data) {
@@ -70,13 +76,13 @@ exports.updatePost = async (req, res) => {
 }
 
 exports.deletePost = async (req, res) => {
-  const { id } = req.params
+  const { id: slug } = req.params
 
   try {
     const data = await Post.destroy({
       returning: true,
       where: {
-        id: id,
+        slug: slug,
       },
     })
 
