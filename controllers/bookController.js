@@ -5,10 +5,10 @@ exports.getCurrentlyReading = async (req, res) => {
   const url = 'https://app.thestorygraph.com/currently-reading/allieeeee'
 
   try {
-    const res = await axios(url)
+    const html = await axios(url)
 
-    if (res?.data) {
-      const $ = cheerio.load(res.data)
+    if (html?.data) {
+      const $ = cheerio.load(html.data)
 
       const books = []
 
@@ -20,7 +20,6 @@ exports.getCurrentlyReading = async (req, res) => {
             $('.book-title-author-and-series span a', el).prop('href')
           const author = $('.book-title-author-and-series p a', el).text()
           const img = $('.book-cover img', el).prop('src')
-          console.log(title)
 
           books.push({
             title: title,
@@ -30,9 +29,13 @@ exports.getCurrentlyReading = async (req, res) => {
           })
         }
       )
-    }
 
-    res.send(books)
+      const data = {
+        books: books,
+      }
+
+      res.json(data)
+    }
   } catch (e) {
     res.send(e)
   }
