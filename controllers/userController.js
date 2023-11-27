@@ -7,7 +7,7 @@ const models = require('../models')
 const config = require('../config/auth.config')
 
 exports.isLoggedIn = (req, res) => {
-  res.status(200).send('User logged in.')
+  res.status(200).send({ message: 'User is logged in.', loggedIn: true })
 }
 
 exports.login = async (req, res) => {
