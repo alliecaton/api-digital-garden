@@ -17,7 +17,6 @@ exports.getPosts = async (req, res) => {
 }
 
 exports.getPost = async (req, res) => {
-  console.log(req.params)
   const { id: slug } = req.params
 
   try {
