@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
   class Bookmark extends Model {
     static associate(models) {
       this.belongsToMany(models.Tag, {
+        as: 'tags',
         through: 'BookmarkTags',
         foreignKey: 'bookmarkId',
         otherKey: 'tagId',

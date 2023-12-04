@@ -8,7 +8,6 @@ const postRouter = require('./routes/postRoute')
 const userRouter = require('./routes/userRoute')
 const bookRouter = require('./routes/bookRoute')
 const bookmarkRouter = require('./routes/bookmarkRoute')
-const tagRouter = require('./routes/tagRoute')
 
 require('dotenv').config()
 
@@ -35,7 +34,6 @@ app.use(process.env.API_BASE, postRouter)
 app.use(process.env.API_BASE, bookRouter)
 app.use(process.env.API_BASE, userRouter)
 app.use(process.env.API_BASE, bookmarkRouter)
-app.use(process.env.API_BASE, tagRouter)
 
 let port = process.env.PORT || 3001
 

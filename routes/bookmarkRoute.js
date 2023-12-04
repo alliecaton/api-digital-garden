@@ -9,4 +9,8 @@ router.get('/bookmarks', controller.getBookmarks)
 
 router.post('/bookmarks', [verifyJwt], controller.createBookmark)
 
+router.put('/bookmarks/:id', [verifyJwt], controller.updateBookmark)
+
+router.delete('/bookmarks/:id', [verifyJwt], controller.deleteBookmark)
+
 module.exports = router
