@@ -7,6 +7,7 @@ const cors = require('cors')
 const postRouter = require('./routes/postRoute')
 const userRouter = require('./routes/userRoute')
 const bookRouter = require('./routes/bookRoute')
+const bookmarkRouter = require('./routes/bookmarkRoute')
 
 require('dotenv').config()
 
@@ -32,6 +33,7 @@ db.authenticate()
 app.use(process.env.API_BASE, postRouter)
 app.use(process.env.API_BASE, bookRouter)
 app.use(process.env.API_BASE, userRouter)
+app.use(process.env.API_BASE, bookmarkRouter)
 
 let port = process.env.PORT || 3001
 
