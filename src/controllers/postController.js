@@ -22,8 +22,6 @@ export const getPosts = async (req, res, next) => {
 export const getPost = async (req, res, next) => {
   const { id: slug } = req.params
 
-  console.log(req.params)
-
   try {
     // TODO: update this to use findUnique and update frontend to pass the id as well as the slug
     const data = await Posts.findFirst({
