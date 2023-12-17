@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import prisma from '../prisma/prisma.js'
+import prisma from '../../prisma/prisma.js'
 import config from '../config/auth.config.js'
 
 const { Users } = prisma

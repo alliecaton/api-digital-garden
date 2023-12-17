@@ -1,7 +1,7 @@
 import cheerio from 'cheerio'
 import axios from 'axios'
 
-export const getCurrentlyReading = async (req, res) => {
+export const getCurrentlyReading = async (req, res, next) => {
   const url = 'https://app.thestorygraph.com/currently-reading/allieeeee'
 
   try {
@@ -34,9 +34,11 @@ export const getCurrentlyReading = async (req, res) => {
         books: books,
       }
 
+      throw Error('test')
+
       res.json(data)
     }
   } catch (e) {
-    res.send(e)
+    next(e)
   }
 }
