@@ -2,7 +2,7 @@ import prisma from '../../prisma/prisma.js'
 
 const { Tags } = prisma
 
-export const getTags = async (req, res) => {
+export const getTags = async (req, res, next) => {
   try {
     const data = await Tags.findMany({
       orderBy: {
@@ -16,5 +16,6 @@ export const getTags = async (req, res) => {
     }
   } catch (e) {
     console.error(e)
+    next(e)
   }
 }

@@ -9,7 +9,7 @@ export const isLoggedIn = (req, res) => {
   res.status(200).send({ message: 'User is logged in.', loggedIn: true })
 }
 
-export const login = async (req, res) => {
+export const login = async (req, res, next) => {
   try {
     const { username, password } = req.body
 
@@ -49,6 +49,6 @@ export const login = async (req, res) => {
     }
   } catch (error) {
     console.error(error)
-    res.status(500).send({ error: err.message })
+    next(e)
   }
 }

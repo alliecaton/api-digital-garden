@@ -2,7 +2,7 @@ import prisma from '../../prisma/prisma.js'
 
 const { Bookmarks } = prisma
 
-export const getBookmarks = async (req, res) => {
+export const getBookmarks = async (req, res, next) => {
   try {
     const data = await Bookmarks.findMany({
       orderBy: {
@@ -16,10 +16,11 @@ export const getBookmarks = async (req, res) => {
     }
   } catch (e) {
     console.error(e)
+    next(e)
   }
 }
 
-export const createBookmark = async (req, res) => {
+export const createBookmark = async (req, res, next) => {
   const { title, url, description, quote, tags } = req.body
 
   try {
@@ -43,10 +44,11 @@ export const createBookmark = async (req, res) => {
     }
   } catch (e) {
     console.error(e)
+    next(e)
   }
 }
 
-export const updateBookmark = async (req, res) => {
+export const updateBookmark = async (req, res, next) => {
   const { id, title, url, description, quote, tags } = req.body
 
   try {
@@ -64,10 +66,11 @@ export const updateBookmark = async (req, res) => {
     }
   } catch (e) {
     console.error(e)
+    next(e)
   }
 }
 
-export const deleteBookmark = async (req, res) => {
+export const deleteBookmark = async (req, res, next) => {
   const { id } = req.body
 
   try {
@@ -82,5 +85,6 @@ export const deleteBookmark = async (req, res) => {
     }
   } catch (e) {
     console.error(e)
+    next(e)
   }
 }

@@ -2,7 +2,7 @@ import prisma from '../../prisma/prisma.js'
 
 const { Posts } = prisma
 
-export const getPosts = async (req, res) => {
+export const getPosts = async (req, res, next) => {
   try {
     const data = await Posts.findMany({
       orderBy: {
@@ -14,11 +14,12 @@ export const getPosts = async (req, res) => {
       res.send(data)
     }
   } catch (e) {
-    console.error(e.message)
+    console.error(e)
+    next(e)
   }
 }
 
-export const getPost = async (req, res) => {
+export const getPost = async (req, res, next) => {
   const { id: slug } = req.params
 
   console.log(req.params)
@@ -35,11 +36,12 @@ export const getPost = async (req, res) => {
       res.send(data)
     }
   } catch (e) {
-    console.error(e.message)
+    console.error(e)
+    next(e)
   }
 }
 
-export const createPost = async (req, res) => {
+export const createPost = async (req, res, next) => {
   const { title, content } = req.body
 
   try {
@@ -54,10 +56,11 @@ export const createPost = async (req, res) => {
     }
   } catch (e) {
     console.error(e)
+    next(e)
   }
 }
 
-export const updatePost = async (req, res) => {
+export const updatePost = async (req, res, next) => {
   const { title, content } = req.body
   const { id: slug } = req.params
 
@@ -72,10 +75,11 @@ export const updatePost = async (req, res) => {
     }
   } catch (e) {
     console.error(e)
+    next(e)
   }
 }
 
-export const deletePost = async (req, res) => {
+export const deletePost = async (req, res, next) => {
   const { id: slug } = req.params
 
   try {
