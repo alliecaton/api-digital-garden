@@ -1,7 +1,7 @@
-const cheerio = require('cheerio')
-const axios = require('axios')
+import cheerio from 'cheerio'
+import axios from 'axios'
 
-exports.getCurrentlyReading = async (req, res) => {
+export const getCurrentlyReading = async (req, res) => {
   const url = 'https://app.thestorygraph.com/currently-reading/allieeeee'
 
   try {

@@ -1,7 +1,5 @@
-const models = require('../models')
-
-const Bookmark = models.Bookmark
-const Tag = models.Tag
+import Bookmark from '../models/bookmark.js'
+import Tag from '../models/tag.js'
 
 const setTagsOnBookmark = async (bookmark, tags) => {
   const createdTags = await Promise.all(
@@ -16,10 +14,10 @@ const setTagsOnBookmark = async (bookmark, tags) => {
   await bookmark.setTags(createdTags.map((tag) => tag[0]))
 }
 
-exports.getBookmarks = async (req, res) => {
+export const getBookmarks = async (req, res) => {
   try {
     const data = await Bookmark.findAndCountAll({
-      include: [{ model: models.Tag, as: 'tags' }],
+      include: [{ model: Tag, as: 'tags' }],
       order: [['updatedAt', 'DESC']],
     })
 
@@ -31,7 +29,7 @@ exports.getBookmarks = async (req, res) => {
   }
 }
 
-exports.createBookmark = async (req, res) => {
+export const createBookmark = async (req, res) => {
   const { title, url, description, quote, tags } = req.body
 
   try {
@@ -43,8 +41,8 @@ exports.createBookmark = async (req, res) => {
         quote: quote,
       },
       {
-        include: [{ model: models.Tag, as: 'tags' }],
-        exclude: [models.BookmarkTags],
+        include: [{ model: Tag, as: 'tags' }],
+        exclude: [BookmarkTags],
       }
     )
 
@@ -60,7 +58,7 @@ exports.createBookmark = async (req, res) => {
   }
 }
 
-exports.updateBookmark = async (req, res) => {
+export const updateBookmark = async (req, res) => {
   const { id, title, url, description, quote, tags } = req.body
 
   try {
@@ -81,7 +79,7 @@ exports.updateBookmark = async (req, res) => {
   }
 }
 
-exports.deleteBookmark = async (req, res) => {
+export const deleteBookmark = async (req, res) => {
   const { id } = req.body
 
   try {

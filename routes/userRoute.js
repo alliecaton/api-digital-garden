@@ -1,11 +1,10 @@
-const express = require('express')
-const router = express.Router()
+import { Router } from 'express'
+import verifyJwt from '../middleware/verifyJwt.js'
+import * as controller from '../controllers/userController.js'
 
-const verifyJwt = require('../middleware/verifyJwt')
+const user = Router()
 
-const controller = require('../controllers/userController')
-
-router.use(function (req, res, next) {
+user.use(function (req, res, next) {
   res.header(
     'Access-Control-Allow-Headers',
     'x-access-token, Origin, Content-Type, Accept'
@@ -14,8 +13,8 @@ router.use(function (req, res, next) {
   next()
 })
 
-router.get('/user', [verifyJwt], controller.isLoggedIn)
+user.get('/user', [verifyJwt], controller.isLoggedIn)
 
-router.post('/login', controller.login)
+user.post('/login', controller.login)
 
-module.exports = router
+export default user

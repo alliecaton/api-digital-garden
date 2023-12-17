@@ -1,8 +1,8 @@
-const express = require('express')
-const router = express.Router()
+import { Router } from 'express'
+import * as controller from '../controllers/bookController.js'
 
-const controller = require('../controllers/bookController')
+const book = Router()
 
-router.get('/current-book', controller.getCurrentlyReading)
+book.get('/current-book', controller.getCurrentlyReading)
 
-module.exports = router
+export default book

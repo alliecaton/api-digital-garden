@@ -1,20 +1,19 @@
-const bcrypt = require('bcrypt')
-const db = require('../models')
-const jwt = require('jsonwebtoken')
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
-const models = require('../models')
+import User from '../models/user.js'
 
-const config = require('../config/auth.config')
+import config from '../config/auth.config.js'
 
-exports.isLoggedIn = (req, res) => {
+export const isLoggedIn = (req, res) => {
   res.status(200).send({ message: 'User is logged in.', loggedIn: true })
 }
 
-exports.login = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { username, password } = req.body
 
-    const user = await models.User.findOne({
+    const user = await User.findOne({
       where: {
         username: username,
       },

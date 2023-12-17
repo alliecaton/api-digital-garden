@@ -2,13 +2,13 @@
 import { Model } from 'sequelize'
 
 export default function (sequelize, DataTypes) {
-  class BookmarkTag extends Model {
+  class PostTag extends Model {
     static associate(models) {
-      BookmarkTag.belongsTo(models.Bookmark, { foreignKey: 'bookmarkId' })
-      BookmarkTag.belongsTo(models.Tag, { foreignKey: 'tagId' })
+      PostTag.belongsTo(models.Post, { foreignKey: 'postId' })
+      PostTag.belongsTo(models.Tag, { foreignKey: 'tagId' })
     }
   }
-  BookmarkTag.init(
+  PostTag.init(
     {
       createdAt: {
         type: DataTypes.DATE,
@@ -22,10 +22,10 @@ export default function (sequelize, DataTypes) {
     {
       sequelize,
       freezeTableName: true,
-      modelName: 'BookmarkTag',
-      tableName: 'BookmarkTag',
+      modelName: 'PostTag',
+      tableName: 'PostTag',
     }
   )
 
-  return BookmarkTag
+  return PostTag
 }

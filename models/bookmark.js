@@ -1,7 +1,7 @@
 'use strict'
-const { Model } = require('sequelize')
+import { Model } from 'sequelize'
 
-module.exports = (sequelize, DataTypes) => {
+const Bookmark = (sequelize, DataTypes) => {
   class Bookmark extends Model {
     static associate(models) {
       this.belongsToMany(models.Tag, {
@@ -43,3 +43,5 @@ module.exports = (sequelize, DataTypes) => {
 
   return Bookmark
 }
+
+export default Bookmark

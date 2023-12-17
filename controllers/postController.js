@@ -1,8 +1,11 @@
-const models = require('../models')
+// import Post from '../models/post.js'
+import * as models from '../models/index.js'
 
 const Post = models.Post
 
-exports.getPosts = async (req, res) => {
+export const getPosts = async (req, res) => {
+  console.log('CHECKING...', Post)
+
   try {
     const data = await Post.findAndCountAll({
       order: [['updatedAt', 'DESC']],
@@ -16,7 +19,7 @@ exports.getPosts = async (req, res) => {
   }
 }
 
-exports.getPost = async (req, res) => {
+export const getPost = async (req, res) => {
   const { id: slug } = req.params
 
   try {
@@ -34,7 +37,7 @@ exports.getPost = async (req, res) => {
   }
 }
 
-exports.createPost = async (req, res) => {
+export const createPost = async (req, res) => {
   const { title, content } = req.body
 
   try {
@@ -56,7 +59,7 @@ exports.createPost = async (req, res) => {
   }
 }
 
-exports.updatePost = async (req, res) => {
+export const updatePost = async (req, res) => {
   const { title, content } = req.body
   const { id: slug } = req.params
 
@@ -74,7 +77,7 @@ exports.updatePost = async (req, res) => {
   }
 }
 
-exports.deletePost = async (req, res) => {
+export const deletePost = async (req, res) => {
   const { id: slug } = req.params
 
   try {

@@ -1,16 +1,15 @@
-const express = require('express')
-const router = express.Router()
+import { Router } from 'express'
+import verifyJwt from '../middleware/verifyJwt.js'
+import * as controller from '../controllers/bookmarkTagController.js'
 
-const verifyJwt = require('../middleware/verifyJwt')
+const bookmark = Router()
 
-const controller = require('../controllers/bookmarkTagController')
+bookmark.get('/bookmarks', controller.getBookmarks)
 
-router.get('/bookmarks', controller.getBookmarks)
+bookmark.post('/bookmarks', [verifyJwt], controller.createBookmark)
 
-router.post('/bookmarks', [verifyJwt], controller.createBookmark)
+bookmark.put('/bookmarks/:id', [verifyJwt], controller.updateBookmark)
 
-router.put('/bookmarks/:id', [verifyJwt], controller.updateBookmark)
+bookmark.delete('/bookmarks/:id', [verifyJwt], controller.deleteBookmark)
 
-router.delete('/bookmarks/:id', [verifyJwt], controller.deleteBookmark)
-
-module.exports = router
+export default bookmark

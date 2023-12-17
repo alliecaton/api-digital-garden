@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken')
-const config = require('../config/auth.config.js')
+import jwt from 'jsonwebtoken'
+import config from '../config/auth.config.js'
 
 const verifyToken = (req, res, next) => {
   let token = req.headers['x-access-token']
@@ -15,4 +15,4 @@ const verifyToken = (req, res, next) => {
   })
 }
 
-module.exports = verifyToken
+export default verifyToken

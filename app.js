@@ -1,15 +1,19 @@
-const express = require('express')
+import express from 'express'
+import cookieParser from 'cookie-parser'
+import cors from 'cors'
+import dotenv from 'dotenv'
+import db from './config/db.js'
+
+import postRouter from './routes/postRoute.js'
+import userRouter from './routes/userRoute.js'
+import bookRouter from './routes/bookRoute.js'
+import bookmarkRouter from './routes/bookmarkRoute.js'
+
+import errorHandler from './middleware/errorHandler.js'
+
 const app = express()
-const cookieParser = require('cookie-parser')
-const db = require('./config/db.js')
-const cors = require('cors')
 
-const postRouter = require('./routes/postRoute')
-const userRouter = require('./routes/userRoute')
-const bookRouter = require('./routes/bookRoute')
-const bookmarkRouter = require('./routes/bookmarkRoute')
-
-require('dotenv').config()
+dotenv.config()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -28,6 +32,8 @@ db.authenticate()
   .catch((error) => {
     console.error('Unable to connect to the database:', error)
   })
+
+app.use(errorHandler)
 
 // Routes
 app.use(process.env.API_BASE, postRouter)

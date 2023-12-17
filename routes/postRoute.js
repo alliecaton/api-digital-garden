@@ -1,18 +1,18 @@
-const express = require('express')
-const router = express.Router()
+import { Router } from 'express'
+import verifyJwt from '../middleware/verifyJwt.js'
 
-const verifyJwt = require('../middleware/verifyJwt')
+import * as controller from '../controllers/postController.js'
 
-const controller = require('../controllers/postController')
+const post = Router()
 
-router.get('/posts', controller.getPosts)
+post.get('/posts', controller.getPosts)
 
-router.get('/posts/:id', controller.getPost)
+post.get('/posts/:id', controller.getPost)
 
-router.post('/posts', [verifyJwt], controller.createPost)
+post.post('/posts', [verifyJwt], controller.createPost)
 
-router.put('/posts/:id', [verifyJwt], controller.updatePost)
+post.put('/posts/:id', [verifyJwt], controller.updatePost)
 
-router.delete('/posts/:id', [verifyJwt], controller.deletePost)
+post.delete('/posts/:id', [verifyJwt], controller.deletePost)
 
-module.exports = router
+export default post
