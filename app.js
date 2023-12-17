@@ -2,15 +2,14 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import dotenv from 'dotenv'
-import db from './config/db.js'
 
-import postRouter from './routes/postRoute.js'
-import userRouter from './routes/userRoute.js'
-import bookRouter from './routes/bookRoute.js'
-import bookmarkRouter from './routes/bookmarkRoute.js'
-import tagRouter from './routes/tagRoute.js'
+import postRouter from './src/routes/postRoute.js'
+import userRouter from './src/routes/userRoute.js'
+import bookRouter from './src/routes/bookRoute.js'
+import bookmarkRouter from './src/routes/bookmarkRoute.js'
+import tagRouter from './src/routes/tagRoute.js'
 
-import errorHandler from './middleware/errorHandler.js'
+import errorHandler from './src/middleware/errorHandler.js'
 
 const app = express()
 
@@ -25,23 +24,14 @@ app.use(
   })
 )
 
-// DB check
-db.authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.')
-  })
-  .catch((error) => {
-    console.error('Unable to connect to the database:', error)
-  })
-
-// app.use(errorHandler)
-
 // Routes
 app.use(process.env.API_BASE, postRouter)
 app.use(process.env.API_BASE, bookRouter)
 app.use(process.env.API_BASE, userRouter)
 app.use(process.env.API_BASE, bookmarkRouter)
 app.use(process.env.API_BASE, tagRouter)
+
+app.use(errorHandler)
 
 let port = process.env.PORT || 3001
 
