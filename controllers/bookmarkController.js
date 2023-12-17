@@ -1,19 +1,6 @@
 import prisma from '../prisma/prisma.js'
 
-const { Bookmarks, Tags } = prisma
-
-const setTagsOnBookmark = async (bookmark, tags) => {
-  const createdTags = await Promise.all(
-    tags.map((tag) =>
-      Tag.findOrCreate({
-        where: { name: tag.name },
-        defaults: { emoji: tag.emoji },
-      })
-    )
-  )
-
-  await bookmark.setTags(createdTags.map((tag) => tag[0]))
-}
+const { Bookmarks } = prisma
 
 export const getBookmarks = async (req, res) => {
   try {
