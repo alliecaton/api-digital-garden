@@ -34,8 +34,6 @@ export const getCurrentlyReading = async (req, res, next) => {
         books: books,
       }
 
-      throw Error('test')
-
       res.json(data)
     }
   } catch (e) {
