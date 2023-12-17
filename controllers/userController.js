@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-
-import User from '../models/user.js'
-
+import prisma from '../prisma/prisma.js'
 import config from '../config/auth.config.js'
+
+const { Users } = prisma
 
 export const isLoggedIn = (req, res) => {
   res.status(200).send({ message: 'User is logged in.', loggedIn: true })
@@ -13,7 +13,7 @@ export const login = async (req, res) => {
   try {
     const { username, password } = req.body
 
-    const user = await User.findOne({
+    const user = await Users.findFirst({
       where: {
         username: username,
       },

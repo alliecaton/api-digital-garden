@@ -1,18 +1,17 @@
-// import Post from '../models/post.js'
-import * as models from '../models/index.js'
+import prisma from '../prisma/prisma.js'
 
-const Post = models.Post
+const { Posts } = prisma
 
 export const getPosts = async (req, res) => {
-  console.log('CHECKING...', Post)
-
   try {
-    const data = await Post.findAndCountAll({
-      order: [['updatedAt', 'DESC']],
+    const data = await Posts.findMany({
+      orderBy: {
+        updatedAt: 'desc',
+      },
     })
 
     if (data) {
-      res.send(data.rows)
+      res.send(data)
     }
   } catch (e) {
     console.error(e.message)
@@ -22,15 +21,18 @@ export const getPosts = async (req, res) => {
 export const getPost = async (req, res) => {
   const { id: slug } = req.params
 
+  console.log(req.params)
+
   try {
-    const data = await Post.findOne({
+    // TODO: update this to use findUnique and update frontend to pass the id as well as the slug
+    const data = await Posts.findFirst({
       where: {
         slug: slug,
       },
     })
 
     if (data) {
-      res.send(data.dataValues)
+      res.send(data)
     }
   } catch (e) {
     console.error(e.message)
@@ -43,13 +45,9 @@ export const createPost = async (req, res) => {
   try {
     const slug = title.toLowerCase().replace(/\s+/g, '-')
 
-    const data = await Post.create(
-      { title: title, content: content, slug: slug },
-      { isNewRecord: true },
-      {
-        returning: true,
-      }
-    )
+    const data = await Posts.create({
+      data: { title: title, content: content, slug: slug },
+    })
 
     if (data) {
       res.json(data)
@@ -64,10 +62,10 @@ export const updatePost = async (req, res) => {
   const { id: slug } = req.params
 
   try {
-    const data = await Post.update(
-      { title: title, content: content },
-      { returning: true, where: { slug: slug } }
-    )
+    const data = await Posts.update({
+      where: { slug: slug },
+      data: { title: title, content: content },
+    })
 
     if (data) {
       res.json(data)
@@ -81,8 +79,7 @@ export const deletePost = async (req, res) => {
   const { id: slug } = req.params
 
   try {
-    const data = await Post.destroy({
-      returning: true,
+    const data = await Post.delete({
       where: {
         slug: slug,
       },

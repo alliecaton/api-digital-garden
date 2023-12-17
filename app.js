@@ -33,7 +33,7 @@ db.authenticate()
     console.error('Unable to connect to the database:', error)
   })
 
-app.use(errorHandler)
+// app.use(errorHandler)
 
 // Routes
 app.use(process.env.API_BASE, postRouter)

@@ -1,5 +1,6 @@
-import Bookmark from '../models/bookmark.js'
-import Tag from '../models/tag.js'
+import prisma from '../prisma/prisma.js'
+
+const { Bookmarks, Tags } = prisma
 
 const setTagsOnBookmark = async (bookmark, tags) => {
   const createdTags = await Promise.all(
@@ -16,13 +17,15 @@ const setTagsOnBookmark = async (bookmark, tags) => {
 
 export const getBookmarks = async (req, res) => {
   try {
-    const data = await Bookmark.findAndCountAll({
-      include: [{ model: Tag, as: 'tags' }],
-      order: [['updatedAt', 'DESC']],
+    const data = await Bookmarks.findMany({
+      orderBy: {
+        updatedAt: 'desc',
+      },
+      include: { tags: true },
     })
 
     if (data) {
-      res.send(data.rows)
+      res.send(data)
     }
   } catch (e) {
     console.error(e)
@@ -33,25 +36,23 @@ export const createBookmark = async (req, res) => {
   const { title, url, description, quote, tags } = req.body
 
   try {
-    const bookmark = await Bookmark.create(
-      {
+    const bookmark = await Bookmarks.create({
+      data: {
         title: title,
         url: url,
         description: description,
         quote: quote,
+        tags: {
+          create: tags,
+        },
       },
-      {
-        include: [{ model: Tag, as: 'tags' }],
-        exclude: [BookmarkTags],
-      }
-    )
-
-    if (tags) {
-      setTagsOnBookmark(bookmark, tags)
-    }
+      include: {
+        tags: true, // Include all posts in the returned object
+      },
+    })
 
     if (bookmark) {
-      res.json({ bookmark, tags })
+      res.json(bookmark)
     }
   } catch (e) {
     console.error(e)
@@ -62,13 +63,13 @@ export const updateBookmark = async (req, res) => {
   const { id, title, url, description, quote, tags } = req.body
 
   try {
-    const data = await Bookmark.update(
-      { title: title, url: url, description: description, quote: quote },
-      { returning: true, where: { id: id } }
-    )
+    const data = await Bookmark.update({
+      data: { title: title, url: url, description: description, quote: quote },
+      where: { id: id },
+    })
 
     if (tags) {
-      setTagsOnBookmark(data, tags)
+      // setTagsOnBookmark(data, tags)
     }
 
     if (data) {
@@ -83,8 +84,7 @@ export const deleteBookmark = async (req, res) => {
   const { id } = req.body
 
   try {
-    const data = await Bookmark.destroy({
-      returning: true,
+    const data = await Bookmark.delete({
       where: {
         id: id,
       },
