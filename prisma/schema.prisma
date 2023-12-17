@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+// model BookmarkTags {
+//   id         Int        @id @default(autoincrement())
+//   createdAt  DateTime?  @default(now()) @db.Timestamptz(6)
+//   updatedAt  DateTime?  @updatedAt @db.Timestamptz(6)
+//   Bookmarks  Bookmarks? @relation(fields: [bookmarkId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+//   bookmarkId Int?
+//   Tags       Tags?      @relation(fields: [tagId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+//   tagId      Int?
+
+//   // @@id([bookmarkId, tagId])
+// }
+
+model Bookmarks {
+  id           Int            @id @default(autoincrement())
+  title        String?        @db.VarChar(255)
+  url          String?        @db.VarChar(255)
+  description  String?
+  quote        String?
+  createdAt    DateTime?      @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime?      @updatedAt @db.Timestamptz(6)
+  tags         Tags[]
+}
+
+model Posts {
+  id        Int      @id @default(autoincrement())
+  title     String?  @db.VarChar(255)
+  content   String?
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+  slug      String?  @db.VarChar(255)
+}
+
+model Tags {
+  id           Int            @id @default(autoincrement())
+  emoji        String?        @db.VarChar(255)
+  name         String?        @db.VarChar(255)
+  createdAt    DateTime?      @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime?      @updatedAt @db.Timestamptz(6)
+  bookmarks   Bookmarks[]
+}
+
+model Users {
+  id        Int      @id @default(autoincrement())
+  username  String?  @db.VarChar(255)
+  password  String?  @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+}

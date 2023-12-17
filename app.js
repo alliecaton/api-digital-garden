@@ -1,15 +1,19 @@
-const express = require('express')
+import express from 'express'
+import cookieParser from 'cookie-parser'
+import cors from 'cors'
+import dotenv from 'dotenv'
+
+import postRouter from './src/routes/postRoute.js'
+import userRouter from './src/routes/userRoute.js'
+import bookRouter from './src/routes/bookRoute.js'
+import bookmarkRouter from './src/routes/bookmarkRoute.js'
+import tagRouter from './src/routes/tagRoute.js'
+
+import errorHandler from './src/middleware/errorHandler.js'
+
 const app = express()
-const cookieParser = require('cookie-parser')
-const db = require('./config/db.js')
-const cors = require('cors')
 
-const postRouter = require('./routes/postRoute')
-const userRouter = require('./routes/userRoute')
-const bookRouter = require('./routes/bookRoute')
-const bookmarkRouter = require('./routes/bookmarkRoute')
-
-require('dotenv').config()
+dotenv.config()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -20,20 +24,14 @@ app.use(
   })
 )
 
-// DB check
-db.authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.')
-  })
-  .catch((error) => {
-    console.error('Unable to connect to the database:', error)
-  })
-
 // Routes
 app.use(process.env.API_BASE, postRouter)
 app.use(process.env.API_BASE, bookRouter)
 app.use(process.env.API_BASE, userRouter)
 app.use(process.env.API_BASE, bookmarkRouter)
+app.use(process.env.API_BASE, tagRouter)
+
+app.use(errorHandler)
 
 let port = process.env.PORT || 3001
 

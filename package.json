@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "API for my digital garden",
   "main": "app.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon app.js",
     "start": "nodemon app.js",
@@ -12,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^5.7.0",
     "aws-sdk": "^2.1494.0",
     "axios": "^1.6.2",
     "bcrypt": "^5.1.1",
@@ -28,6 +30,7 @@
     "sequelize": "^6.33.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "prisma": "^5.7.0"
   }
 }
