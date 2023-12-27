@@ -59,12 +59,11 @@ export const createPost = async (req, res, next) => {
 }
 
 export const updatePost = async (req, res, next) => {
-  const { title, content } = req.body
-  const { id: slug } = req.params
+  const { title, content, id } = req.body
 
   try {
     const data = await Posts.update({
-      where: { slug: slug },
+      where: { id: id },
       data: { title: title, content: content },
     })
 
@@ -78,12 +77,12 @@ export const updatePost = async (req, res, next) => {
 }
 
 export const deletePost = async (req, res, next) => {
-  const { id: slug } = req.params
+  const { id } = req.body
 
   try {
-    const data = await Post.delete({
+    const data = await Posts.delete({
       where: {
-        slug: slug,
+        id: id,
       },
     })
 
