@@ -3,8 +3,17 @@ import prisma from '../../prisma/prisma.js'
 const { Bookmarks } = prisma
 
 export const getBookmarks = async (req, res, next) => {
+  const { page } = req.query
+
+  let skipNum = 0
+  if (page) {
+    skipNum = (Number(page) - 1) * 10
+  }
+
   try {
     const data = await Bookmarks.findMany({
+      skip: skipNum,
+      take: 10,
       orderBy: {
         updatedAt: 'desc',
       },

@@ -34,6 +34,8 @@ export const getPost = async (req, res, next) => {
 
     if (data) {
       res.send(data)
+    } else {
+      throw new Error('Post Not Found')
     }
   } catch (e) {
     console.error(e)
