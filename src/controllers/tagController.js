@@ -8,7 +8,7 @@ export const getTags = async (req, res, next) => {
       orderBy: {
         updatedAt: 'desc',
       },
-      include: { bookmarks: true },
+      // include: { bookmarks: true },
     })
 
     if (data) {

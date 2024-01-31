@@ -57,10 +57,6 @@ export const updateBookmark = async (req, res, next) => {
       where: { id: id },
     })
 
-    if (tags) {
-      // setTagsOnBookmark(data, tags)
-    }
-
     if (data) {
       res.json(data)
     }
