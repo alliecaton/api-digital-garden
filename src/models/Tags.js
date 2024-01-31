@@ -6,14 +6,16 @@ export const findOrCreateTags = async (tags) => {
   if (tags) {
     return await Promise.all(
       tags.map(async (tag) => {
-        const existingTag = await Tags.findUnique({
-          where: {
-            id: tag.id,
-          },
-        })
+        if (tag.id) {
+          const existingTag = await Tags.findUnique({
+            where: {
+              id: tag.id,
+            },
+          })
 
-        if (existingTag) {
-          return existingTag
+          if (existingTag) {
+            return existingTag
+          }
         } else {
           const newTag = await Tags.create({
             data: {
