@@ -4,8 +4,19 @@ import { findOrCreateTags } from '../models/Tags.js'
 const { Posts } = prisma
 
 export const getPosts = async (req, res, next) => {
+  const { page } = req.query
+
+  let skipNum = 0
+  if (page) {
+    skipNum = (Number(page) - 1) * 10
+  }
+
   try {
+    const totalPosts = await Posts.count()
+    const totalPages = Math.ceil(totalPosts / 10)
+
     const data = await Posts.findMany({
+      ...(page && { skip: skipNum, take: 10 }),
       orderBy: {
         createdAt: 'desc',
       },
@@ -13,7 +24,14 @@ export const getPosts = async (req, res, next) => {
     })
 
     if (data) {
-      res.send(data)
+      res.send({
+        data: data,
+        pagination: {
+          current: page ? Number(page) : 1,
+          totalResults: totalPosts,
+          totalPages: totalPages,
+        },
+      })
     }
   } catch (e) {
     console.error(e)
@@ -66,11 +84,13 @@ export const createPost = async (req, res, next) => {
         title: title,
         content: content,
         slug: slug + '-' + slugId,
-        tags: {
-          connect: createdTags.map((tag) => ({
-            id: tag.id,
-          })),
-        },
+        ...(createdTags && {
+          tags: {
+            connect: createdTags.map((tag) => ({
+              id: tag.id,
+            })),
+          },
+        }),
       },
       include: {
         tags: true, // Include all posts in the returned object

@@ -11,6 +11,9 @@ export const getBookmarks = async (req, res, next) => {
   }
 
   try {
+    const totalBookmarks = await Bookmarks.count()
+    const totalPages = Math.ceil(totalBookmarks / 10)
+
     const data = await Bookmarks.findMany({
       skip: skipNum,
       take: 10,
@@ -21,7 +24,14 @@ export const getBookmarks = async (req, res, next) => {
     })
 
     if (data) {
-      res.send(data)
+      res.send({
+        data: data,
+        pagination: {
+          current: page ? Number(page) : 1,
+          totalResults: totalBookmarks,
+          totalPages: totalPages,
+        },
+      })
     }
   } catch (e) {
     console.error(e)
