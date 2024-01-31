@@ -3,8 +3,20 @@ import prisma from '../../prisma/prisma.js'
 const { Bookmarks } = prisma
 
 export const getBookmarks = async (req, res, next) => {
+  const { page } = req.query
+
+  let skipNum = 0
+  if (page) {
+    skipNum = (Number(page) - 1) * 10
+  }
+
   try {
+    const totalBookmarks = await Bookmarks.count()
+    const totalPages = Math.ceil(totalBookmarks / 10)
+
     const data = await Bookmarks.findMany({
+      skip: skipNum,
+      take: 10,
       orderBy: {
         updatedAt: 'desc',
       },
@@ -12,7 +24,14 @@ export const getBookmarks = async (req, res, next) => {
     })
 
     if (data) {
-      res.send(data)
+      res.send({
+        data: data,
+        pagination: {
+          current: page ? Number(page) : 1,
+          totalResults: totalBookmarks,
+          totalPages: totalPages,
+        },
+      })
     }
   } catch (e) {
     console.error(e)
@@ -56,10 +75,6 @@ export const updateBookmark = async (req, res, next) => {
       data: { title: title, url: url, description: description, quote: quote },
       where: { id: id },
     })
-
-    if (tags) {
-      // setTagsOnBookmark(data, tags)
-    }
 
     if (data) {
       res.json(data)
