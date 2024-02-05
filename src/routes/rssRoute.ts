@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import * as controller from '../controllers/rssController.js'
+import * as controller from '../controllers/rssController'
 
 const rss = Router()
 

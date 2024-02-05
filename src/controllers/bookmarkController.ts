@@ -1,8 +1,14 @@
-import prisma from '../../prisma/prisma.js'
+import prisma from '../../prisma/prisma'
 
-const { Bookmarks } = prisma
+import type { Request, Response, NextFunction } from 'express'
 
-export const getBookmarks = async (req, res, next) => {
+const { bookmarks } = prisma
+
+export const getBookmarks = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { page } = req.query
 
   let skipNum = 0
@@ -11,10 +17,10 @@ export const getBookmarks = async (req, res, next) => {
   }
 
   try {
-    const totalBookmarks = await Bookmarks.count()
+    const totalBookmarks = await bookmarks.count()
     const totalPages = Math.ceil(totalBookmarks / 10)
 
-    const data = await Bookmarks.findMany({
+    const data = await bookmarks.findMany({
       skip: skipNum,
       take: 10,
       orderBy: {
@@ -39,11 +45,15 @@ export const getBookmarks = async (req, res, next) => {
   }
 }
 
-export const createBookmark = async (req, res, next) => {
+export const createBookmark = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { title, url, description, quote, tags } = req.body
 
   try {
-    const bookmark = await Bookmarks.create({
+    const bookmark = await bookmarks.create({
       data: {
         title: title,
         url: url,
@@ -67,11 +77,15 @@ export const createBookmark = async (req, res, next) => {
   }
 }
 
-export const updateBookmark = async (req, res, next) => {
+export const updateBookmark = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { id, title, url, description, quote, tags } = req.body
 
   try {
-    const data = await Bookmark.update({
+    const data = await bookmarks.update({
       data: { title: title, url: url, description: description, quote: quote },
       where: { id: id },
     })
@@ -85,11 +99,15 @@ export const updateBookmark = async (req, res, next) => {
   }
 }
 
-export const deleteBookmark = async (req, res, next) => {
+export const deleteBookmark = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { id } = req.body
 
   try {
-    const data = await Bookmark.delete({
+    const data = await bookmarks.delete({
       where: {
         id: id,
       },

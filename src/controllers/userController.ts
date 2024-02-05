@@ -1,19 +1,25 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import prisma from '../../prisma/prisma.js'
-import config from '../config/auth.config.js'
+import prisma from '../../prisma/prisma'
+import config from '../config/auth.config'
 
-const { Users } = prisma
+import type { Request, Response, NextFunction } from 'express'
 
-export const isLoggedIn = (req, res) => {
+const { users } = prisma
+
+export const isLoggedIn = (res: Response) => {
   res.status(200).send({ message: 'User is logged in.', loggedIn: true })
 }
 
-export const login = async (req, res, next) => {
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { username, password } = req.body
 
-    const user = await Users.findFirst({
+    const user = await users.findFirst({
       where: {
         username: username,
       },
@@ -33,7 +39,7 @@ export const login = async (req, res, next) => {
         })
       }
 
-      if (valid) {
+      if (valid && config.secret) {
         const token = jwt.sign({ id: user.id }, config.secret, {
           algorithm: 'HS256',
           allowInsecureKeySizes: true,

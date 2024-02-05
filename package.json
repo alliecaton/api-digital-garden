@@ -2,18 +2,19 @@
   "name": "api-digital-garden",
   "version": "1.0.0",
   "description": "API for my digital garden",
-  "main": "app.js",
+  "main": "app.ts",
   "type": "module",
   "scripts": {
-    "dev": "nodemon app.js",
-    "start": "nodemon app.js",
-    "migrate": "prisma migrate dev",
+    "dev": "tsx watch src/app.ts",
+    "start": "tsc --noEmit tsx src/app.ts",
+    "migrate-dev": "prisma migrate dev",
+    "type-check": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.7.0",
+    "@prisma/client": "^5.9.1",
     "aws-sdk": "^2.1494.0",
     "axios": "^1.6.2",
     "bcrypt": "^5.1.1",
@@ -31,7 +32,16 @@
     "rss": "^1.2.2"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1",
-    "prisma": "^5.7.0"
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.6",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/node": "^20.11.16",
+    "@types/rss": "^0.0.32",
+    "prisma": "^5.9.1",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
   }
 }

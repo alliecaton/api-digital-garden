@@ -1,13 +1,19 @@
-import prisma from '../../prisma/prisma.js'
+import prisma from '../../prisma/prisma'
+
+import type { Request, Response, NextFunction } from 'express'
 
 import RSS from 'rss'
 import { marked } from 'marked'
 
-const { Posts } = prisma
+const { posts } = prisma
 
-export const generateRss = async (req, res, next) => {
+export const generateRss = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const posts = await Posts.findMany({
+    const allPosts = await posts.findMany({
       orderBy: { createdAt: 'desc' },
     })
 
@@ -18,12 +24,12 @@ export const generateRss = async (req, res, next) => {
       site_url: 'https://garden.alliecaton.com',
     })
 
-    posts.forEach((post) => {
-      const parsedContent = marked(post.content)
+    allPosts.forEach(async (post) => {
+      const parsedContent = await marked(post.content)
 
       feed.item({
         title: post.title,
-        guid: post.id,
+        guid: String(post.id),
         description: parsedContent,
         url: `https://garden.alliecaton.com/posts/${post.slug}`,
         date: post.createdAt,

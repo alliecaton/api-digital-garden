@@ -1,4 +1,6 @@
-const errorHandler = (err, req, res, next) => {
+import type { Response } from 'express'
+
+const errorHandler = (err: any, res: Response) => {
   if (err.message.includes('Not Found')) {
     err.statusCode = 404
   }

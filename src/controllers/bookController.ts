@@ -1,16 +1,29 @@
-import cheerio from 'cheerio'
+import { load } from 'cheerio'
 import axios from 'axios'
 
-export const getCurrentlyReading = async (req, res, next) => {
+import type { Response, Request, NextFunction } from 'express'
+
+type Book = {
+  title: string
+  link: string
+  author: string
+  img?: string
+}
+
+export const getCurrentlyReading = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const url = 'https://app.thestorygraph.com/currently-reading/allieeeee'
 
   try {
     const html = await axios(url)
 
     if (html?.data) {
-      const $ = cheerio.load(html.data)
+      const $ = load(html.data)
 
-      const books = []
+      const books: Book[] = []
 
       $('div[class="mt-5 block md:hidden"] .book-pane-content').each(
         (i, el) => {
@@ -34,9 +47,12 @@ export const getCurrentlyReading = async (req, res, next) => {
         books: books,
       }
 
-      res.json(data)
+      if (data.books) {
+        res.json(data)
+      }
     }
   } catch (e) {
+    console.error(e)
     next(e)
   }
 }
