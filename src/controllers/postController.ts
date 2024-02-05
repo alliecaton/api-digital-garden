@@ -1,9 +1,15 @@
-import prisma from '../../prisma/prisma.js'
-import { findOrCreateTags } from '../models/Tags.js'
+import prisma from '../../prisma/prisma'
+import { findOrCreateTags } from '../models/Tags'
 
-const { Posts } = prisma
+import type { Request, Response, NextFunction } from 'express'
 
-export const getPosts = async (req, res, next) => {
+const { posts } = prisma
+
+export const getPosts = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { page } = req.query
 
   let skipNum = 0
@@ -12,10 +18,10 @@ export const getPosts = async (req, res, next) => {
   }
 
   try {
-    const totalPosts = await Posts.count()
+    const totalPosts = await posts.count()
     const totalPages = Math.ceil(totalPosts / 10)
 
-    const data = await Posts.findMany({
+    const data = await posts.findMany({
       ...(page && { skip: skipNum, take: 10 }),
       orderBy: {
         createdAt: 'desc',
@@ -39,11 +45,15 @@ export const getPosts = async (req, res, next) => {
   }
 }
 
-export const getPost = async (req, res, next) => {
+export const getPost = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { id: slug } = req.params
 
   try {
-    const data = await Posts.findFirst({
+    const data = await posts.findFirst({
       where: {
         slug: slug,
       },
@@ -61,13 +71,17 @@ export const getPost = async (req, res, next) => {
   }
 }
 
-export const createPost = async (req, res, next) => {
+export const createPost = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { title, content, tags } = req.body
 
   const createdTags = await findOrCreateTags(tags)
 
   // Uniqueify slug with ID
-  const latestQuery = await Posts.findMany({
+  const latestQuery = await posts.findMany({
     orderBy: {
       id: 'desc',
     },
@@ -79,7 +93,7 @@ export const createPost = async (req, res, next) => {
   try {
     const slug = title.toLowerCase().replace(/\s+/g, '-')
 
-    const data = await Posts.create({
+    const data = await posts.create({
       data: {
         title: title,
         content: content,
@@ -87,7 +101,7 @@ export const createPost = async (req, res, next) => {
         ...(createdTags && {
           tags: {
             connect: createdTags.map((tag) => ({
-              id: tag.id,
+              id: tag?.id,
             })),
           },
         }),
@@ -106,28 +120,46 @@ export const createPost = async (req, res, next) => {
   }
 }
 
-export const updatePost = async (req, res, next) => {
+export const updatePost = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { title, content, id, tags } = req.body
 
-  let insertData = { title: title, content: content }
+  type InsertData = {
+    title: string
+    content: string
+    tags?: {
+      connect: {
+        id: number | undefined
+      }[]
+    }
+  }
+
+  let insertData: InsertData = { title: title, content: content }
 
   if (tags?.length) {
     const createdTags = await findOrCreateTags(tags)
 
     console.log(createdTags)
 
-    insertData = {
-      ...insertData,
-      tags: {
-        connect: createdTags.map((tag) => ({
-          id: tag.id,
-        })),
-      },
+    if (createdTags?.length) {
+      insertData = {
+        ...insertData,
+        tags: {
+          connect: createdTags
+            .map((tag) => ({
+              id: tag?.id,
+            }))
+            .filter((tag) => tag !== undefined),
+        },
+      }
     }
   }
 
   try {
-    const data = await Posts.update({
+    const data = await posts.update({
       where: { id: id },
       data: insertData,
       include: {
@@ -144,11 +176,15 @@ export const updatePost = async (req, res, next) => {
   }
 }
 
-export const deletePost = async (req, res, next) => {
+export const deletePost = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { id } = req.body
 
   try {
-    const data = await Posts.delete({
+    const data = await posts.delete({
       where: {
         id: id,
       },
@@ -159,5 +195,6 @@ export const deletePost = async (req, res, next) => {
     }
   } catch (e) {
     console.error(e)
+    next(e)
   }
 }

@@ -1,13 +1,14 @@
-import prisma from '../../prisma/prisma.js'
+import prisma from '../../prisma/prisma'
+import { Tag } from '../types/Tags'
 
-const { Tags } = prisma
+const { tags } = prisma
 
-export const findOrCreateTags = async (tags) => {
-  if (tags) {
+export const findOrCreateTags = async (reqTags: Tag[]) => {
+  if (reqTags) {
     return await Promise.all(
-      tags.map(async (tag) => {
+      reqTags.map(async (tag: Tag) => {
         if (tag.id) {
-          const existingTag = await Tags.findUnique({
+          const existingTag = await tags.findUnique({
             where: {
               id: tag.id,
             },
@@ -17,7 +18,7 @@ export const findOrCreateTags = async (tags) => {
             return existingTag
           }
         } else {
-          const newTag = await Tags.create({
+          const newTag = await tags.create({
             data: {
               name: tag.name,
               emoji: tag.emoji,

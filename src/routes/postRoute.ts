@@ -1,7 +1,7 @@
 import { Router } from 'express'
-import verifyJwt from '../middleware/verifyJwt.js'
+import verifyJwt from '../middleware/verifyJwt'
 
-import * as controller from '../controllers/postController.js'
+import * as controller from '../controllers/postController'
 
 const post = Router()
 
