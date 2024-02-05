@@ -8,6 +8,7 @@ import userRouter from './src/routes/userRoute.js'
 import bookRouter from './src/routes/bookRoute.js'
 import bookmarkRouter from './src/routes/bookmarkRoute.js'
 import tagRouter from './src/routes/tagRoute.js'
+import rssRouter from './src/routes/rssRoute.js'
 
 import errorHandler from './src/middleware/errorHandler.js'
 
@@ -30,6 +31,7 @@ app.use(process.env.API_BASE, bookRouter)
 app.use(process.env.API_BASE, userRouter)
 app.use(process.env.API_BASE, bookmarkRouter)
 app.use(process.env.API_BASE, tagRouter)
+app.use(process.env.API_BASE, rssRouter)
 
 app.use(errorHandler)
 
