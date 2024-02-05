@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon app.js",
     "start": "nodemon app.js",
-    "migrate": "npx sequelize-cli db:migrate",
+    "migrate": "prisma migrate dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

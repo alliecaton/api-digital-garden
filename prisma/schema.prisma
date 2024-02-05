@@ -7,19 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-// model BookmarkTags {
-//   id         Int        @id @default(autoincrement())
-//   createdAt  DateTime?  @default(now()) @db.Timestamptz(6)
-//   updatedAt  DateTime?  @updatedAt @db.Timestamptz(6)
-//   Bookmarks  Bookmarks? @relation(fields: [bookmarkId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-//   bookmarkId Int?
-//   Tags       Tags?      @relation(fields: [tagId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-//   tagId      Int?
-
-//   // @@id([bookmarkId, tagId])
-// }
-
 model Bookmarks {
   id           Int            @id @default(autoincrement())
   title        String?        @db.VarChar(255)
@@ -38,6 +25,7 @@ model Posts {
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   updatedAt DateTime @updatedAt @db.Timestamptz(6)
   slug      String?  @db.VarChar(255)
+  tags         Tags[]
 }
 
 model Tags {
@@ -47,6 +35,7 @@ model Tags {
   createdAt    DateTime?      @default(now()) @db.Timestamptz(6)
   updatedAt    DateTime?      @updatedAt @db.Timestamptz(6)
   bookmarks   Bookmarks[]
+  posts       Posts[]
 }
 
 model Users {
