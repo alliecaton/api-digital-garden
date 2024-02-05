@@ -24,16 +24,22 @@ export const generateRss = async (
       site_url: 'https://garden.alliecaton.com',
     })
 
-    allPosts.forEach(async (post) => {
+    const promises = allPosts.map(async (post) => {
       const parsedContent = await marked(post.content)
 
-      feed.item({
+      return {
         title: post.title,
         guid: String(post.id),
         description: parsedContent,
         url: `https://garden.alliecaton.com/posts/${post.slug}`,
         date: post.createdAt,
-      })
+      }
+    })
+
+    const feedItems = await Promise.all(promises)
+
+    feedItems.forEach((item) => {
+      feed.item(item)
     })
 
     const rssXml = feed.xml({ indent: true })
