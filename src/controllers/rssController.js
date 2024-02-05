@@ -16,7 +16,6 @@ export const generateRss = async (req, res, next) => {
       description: 'Collection of my thoughts, hobbies, and code stuff.',
       feed_url: 'https://garden.alliecaton.com/rss',
       site_url: 'https://garden.alliecaton.com',
-      cdata: false,
     })
 
     posts.forEach((post) => {
@@ -32,6 +31,7 @@ export const generateRss = async (req, res, next) => {
     })
 
     const rssXml = feed.xml({ indent: true })
+
     res.type('application/xml')
     res.send(rssXml)
   } catch (e) {
