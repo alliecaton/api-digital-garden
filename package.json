@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/app.ts",
-    "start": "tsc --noEmit tsx src/app.ts",
+    "start": "tsx src/app.ts",
     "migrate-dev": "prisma migrate dev",
     "type-check": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1"
