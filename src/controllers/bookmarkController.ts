@@ -1,6 +1,7 @@
 import prisma from '../../prisma/prisma'
 
 import type { Request, Response, NextFunction } from 'express'
+import { findOrCreateTags } from '../models/Tags'
 
 const { bookmarks } = prisma
 
@@ -52,6 +53,8 @@ export const createBookmark = async (
 ) => {
   const { title, url, description, quote, tags } = req.body
 
+  const createdTags = await findOrCreateTags(tags)
+
   try {
     const bookmark = await bookmarks.create({
       data: {
@@ -59,9 +62,13 @@ export const createBookmark = async (
         url: url,
         description: description,
         quote: quote,
-        tags: {
-          create: tags,
-        },
+        ...(createdTags && {
+          tags: {
+            connect: createdTags.map((tag) => ({
+              id: tag?.id,
+            })),
+          },
+        }),
       },
       include: {
         tags: true, // Include all posts in the returned object

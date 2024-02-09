@@ -142,8 +142,6 @@ export const updatePost = async (
   if (tags?.length) {
     const createdTags = await findOrCreateTags(tags)
 
-    console.log(createdTags)
-
     if (createdTags?.length) {
       insertData = {
         ...insertData,
