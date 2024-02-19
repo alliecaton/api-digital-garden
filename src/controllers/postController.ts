@@ -14,7 +14,7 @@ export const getPosts = async (
 ) => {
   const { page, tags } = req.query
 
-  const tagArr = tags?.split(',').map((tag: string) => Number(tag))
+  const tagArr = tags?.split(',').map((tag: string) => tag)
 
   let skipNum = 0
   if (page) {

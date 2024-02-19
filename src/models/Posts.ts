@@ -23,13 +23,13 @@ export const getAllPosts = async (page: number | null, skipNum: number) => {
 export const getPostsByTags = async (
   page: number,
   skipNum: number,
-  tags: number[]
+  tags: string[]
 ) => {
   const total = await prisma.posts.count({
     where: {
       tags: {
         some: {
-          id: {
+          name: {
             in: tags,
           },
         },
@@ -42,7 +42,7 @@ export const getPostsByTags = async (
     where: {
       tags: {
         some: {
-          id: {
+          name: {
             in: tags,
           },
         },

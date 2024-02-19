@@ -31,3 +31,16 @@ export const findOrCreateTags = async (reqTags: Tag[]) => {
     )
   }
 }
+
+export const getTagsByName = async (tagNames: string) => {
+  const arr = tagNames.split(',')
+  const data = await tags.findMany({
+    where: {
+      name: {
+        in: arr,
+      },
+    },
+  })
+
+  return data
+}

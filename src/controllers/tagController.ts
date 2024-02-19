@@ -1,7 +1,8 @@
-import { transferableAbortSignal } from 'util'
 import prisma from '../../prisma/prisma.js'
 
 import type { Request, Response, NextFunction } from 'express'
+
+import { getTagsByName } from '../models/Tags.js'
 
 const { tags } = prisma
 
@@ -10,12 +11,20 @@ export const getTags = async (
   res: Response,
   next: NextFunction
 ) => {
+  const { tagNames } = req.query
+
   try {
-    const data = await tags.findMany({
-      orderBy: {
-        updatedAt: 'desc',
-      },
-    })
+    let data = null
+
+    if (tagNames) {
+      data = await getTagsByName(String(tagNames))
+    } else {
+      data = await tags.findMany({
+        orderBy: {
+          updatedAt: 'desc',
+        },
+      })
+    }
 
     if (data) {
       res.send(data)
