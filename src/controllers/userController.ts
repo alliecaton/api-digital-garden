@@ -7,7 +7,7 @@ import type { Request, Response, NextFunction } from 'express'
 
 const { users } = prisma
 
-export const isLoggedIn = (res: Response) => {
+export const isLoggedIn = (req: Request, res: Response) => {
   res.status(200).send({ message: 'User is logged in.', loggedIn: true })
 }
 

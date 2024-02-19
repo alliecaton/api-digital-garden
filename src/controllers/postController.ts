@@ -1,16 +1,20 @@
 import prisma from '../../prisma/prisma'
+
 import { findOrCreateTags } from '../models/Tags'
+import { getPostsByTags, getAllPosts } from '../models/Posts'
 
 import type { Request, Response, NextFunction } from 'express'
 
 const { posts } = prisma
 
 export const getPosts = async (
-  req: Request,
+  req: Request<{}, {}, {}, { page: string; tags?: string }>,
   res: Response,
   next: NextFunction
 ) => {
-  const { page } = req.query
+  const { page, tags } = req.query
+
+  const tagArr = tags?.split(',').map((tag: string) => Number(tag))
 
   let skipNum = 0
   if (page) {
@@ -18,25 +22,24 @@ export const getPosts = async (
   }
 
   try {
-    const totalPosts = await posts.count()
-    const totalPages = Math.ceil(totalPosts / 10)
+    const pageNum = Number(page)
 
-    const data = await posts.findMany({
-      ...(page && { skip: skipNum, take: 10 }),
-      orderBy: {
-        createdAt: 'desc',
-      },
-      include: { tags: true },
-    })
+    const data = tagArr?.length
+      ? await getPostsByTags(pageNum, skipNum, tagArr)
+      : await getAllPosts(pageNum || null, skipNum)
+
+    const totalPosts = data.total
+    const totalPages = Math.ceil(totalPosts / 10)
 
     if (data) {
       res.send({
-        data: data,
+        data: data.data,
         pagination: {
-          current: page ? Number(page) : 1,
+          current: pageNum ? pageNum : 1,
           totalResults: totalPosts,
           totalPages: totalPages,
         },
+        filters: tags ? tagArr : null,
       })
     }
   } catch (e) {
@@ -196,3 +199,33 @@ export const deletePost = async (
     next(e)
   }
 }
+
+// export const getPostByTags = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   const { tags: tagIds } = req.query
+
+//   try {
+//     const data = await posts.findMany({
+//       where: {
+//         tags: {
+//           some: {
+//             name: {
+//               in: tagIds,
+//             },
+//           },
+//         },
+//       },
+//       include: { tags: true },
+//     })
+
+//     if (data) {
+//       res.send(data)
+//     }
+//   } catch (e) {
+//     console.error(e)
+//     next(e)
+//   }
+// }
