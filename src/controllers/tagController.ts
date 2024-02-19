@@ -25,3 +25,30 @@ export const getTags = async (
     next(e)
   }
 }
+
+export const getPostTags = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  // get all tags that have an associated post
+  try {
+    const data = await tags.findMany({
+      where: {
+        posts: {
+          some: {
+            id: {
+              not: null || undefined,
+            },
+          },
+        },
+      },
+    })
+    if (data) {
+      res.send(data)
+    }
+  } catch (e) {
+    console.error(e)
+    next(e)
+  }
+}
