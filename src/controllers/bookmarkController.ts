@@ -5,34 +5,35 @@ import { findOrCreateTags } from '../models/Tags'
 
 const { bookmarks } = prisma
 
+import { getBookmarksByTags, getAllBookmarks } from '../models/Bookmarks'
+
 export const getBookmarks = async (
-  req: Request,
+  req: Request<{}, {}, {}, { page: string; tags?: string }>,
   res: Response,
   next: NextFunction
 ) => {
-  const { page } = req.query
+  const { page, tags } = req.query
+
+  const tagArr = tags?.split(',').map((tag: string) => tag)
 
   let skipNum = 0
   if (page) {
     skipNum = (Number(page) - 1) * 10
   }
 
-  try {
-    const totalBookmarks = await bookmarks.count()
-    const totalPages = Math.ceil(totalBookmarks / 10)
+  const pageNum = Number(page)
 
-    const data = await bookmarks.findMany({
-      skip: skipNum,
-      take: 10,
-      orderBy: {
-        updatedAt: 'desc',
-      },
-      include: { tags: true },
-    })
+  try {
+    const data = tagArr?.length
+      ? await getBookmarksByTags(pageNum, skipNum, tagArr)
+      : await getAllBookmarks(pageNum, skipNum)
+
+    const totalBookmarks = data.total
+    const totalPages = Math.ceil(totalBookmarks / 10)
 
     if (data) {
       res.send({
-        data: data,
+        data: data.data,
         pagination: {
           current: page ? Number(page) : 1,
           totalResults: totalBookmarks,
