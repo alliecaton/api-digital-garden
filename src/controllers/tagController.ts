@@ -61,3 +61,30 @@ export const getPostTags = async (
     next(e)
   }
 }
+
+export const getBookmarkTags = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  // get all tags that have an associated bookmark
+  try {
+    const data = await tags.findMany({
+      where: {
+        bookmarks: {
+          some: {
+            id: {
+              not: null || undefined,
+            },
+          },
+        },
+      },
+    })
+    if (data) {
+      res.send(data)
+    }
+  } catch (e) {
+    console.error(e)
+    next(e)
+  }
+}
