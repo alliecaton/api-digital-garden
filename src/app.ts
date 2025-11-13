@@ -9,6 +9,7 @@ import bookRouter from './routes/bookRoute'
 import bookmarkRouter from './routes/bookmarkRoute'
 import tagRouter from './routes/tagRoute'
 import rssRouter from './routes/rssRoute'
+import uploadRouter from './routes/uploadRoute'
 
 import errorHandler from './middleware/errorHandler'
 
@@ -33,6 +34,7 @@ app.use(base, userRouter)
 app.use(base, bookmarkRouter)
 app.use(base, tagRouter)
 app.use(base, rssRouter)
+app.use(base, uploadRouter)
 
 app.use(errorHandler)
 
