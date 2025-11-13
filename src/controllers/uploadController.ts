@@ -6,41 +6,6 @@ interface MulterRequest extends Request {
   files?: Express.Multer.File[] | { [fieldname: string]: Express.Multer.File[] }
 }
 
-export const uploadImage = async (
-  req: MulterRequest,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ 
-        error: 'No file uploaded',
-        message: 'Please provide an image file with the field name "image"'
-      })
-    }
-
-    // Upload to S3 using the AWS SDK v3
-    const { url, key } = await uploadToS3(
-      req.file.buffer,
-      req.file.originalname,
-      req.file.mimetype
-    )
-
-    // Return the S3 URL that can be used directly in the frontend
-    res.json({
-      success: true,
-      url: url, // This is the public URL you can use in your frontend
-      key: key,
-      filename: req.file.originalname,
-      size: req.file.size,
-      mimetype: req.file.mimetype,
-    })
-  } catch (e) {
-    console.error(e)
-    next(e)
-  }
-}
-
 export const uploadImages = async (
   req: MulterRequest,
   res: Response,
@@ -63,7 +28,6 @@ export const uploadImages = async (
       })
     }
 
-    // Upload all files to S3 in parallel
     const uploadPromises = files.map((file) =>
       uploadToS3(file.buffer, file.originalname, file.mimetype).then((result) => ({
         success: true,

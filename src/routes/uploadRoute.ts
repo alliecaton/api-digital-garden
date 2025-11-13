@@ -14,12 +14,4 @@ uploadRouter.post(
   controller.uploadImages
 )
 
-// POST endpoint to upload a single image (backward compatibility)
-uploadRouter.post(
-  '/upload/image',
-  verifyJwt,
-  multerUpload.single('image'),
-  controller.uploadImage
-)
-
 export default uploadRouter
