@@ -2,11 +2,6 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import multer from 'multer'
 import path from 'path'
 
-// Configure AWS S3 Client
-// Credentials are automatically loaded from:
-// - Environment variables (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
-// - AWS credentials file (~/.aws/credentials)
-// - IAM role (if running on EC2/ECS/Lambda)
 export const s3Client = new S3Client({
   region: process.env.AWS_REGION || 'us-west-1',
 })
@@ -14,7 +9,7 @@ export const s3Client = new S3Client({
 export const multerUpload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB limit
+    fileSize: 10 * 1024 * 1024, // 10MB
   },
   fileFilter: (
     req: any,
@@ -52,10 +47,10 @@ export const uploadToS3 = async (
   originalName: string,
   mimetype: string
 ): Promise<{ url: string; key: string }> => {
-  // Generate unique filename with timestamp and original name
   const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
-  const ext = path.extname(originalName)
-  const name = path.basename(originalName, ext)
+  const filenameStripped = originalName.replace(/\s+/g, '_')
+  const ext = path.extname(filenameStripped)
+  const name = path.basename(filenameStripped, ext)
   const filename = `${name}-${uniqueSuffix}${ext}`
   const key = `images/${filename}`
 
@@ -69,14 +64,11 @@ export const uploadToS3 = async (
     Key: key,
     Body: fileBuffer,
     ContentType: mimetype,
-    // ACL removed - bucket permissions should be managed via bucket policy
-    // If you need public access, configure it in your S3 bucket policy
   }
 
   try {
     await s3Client.send(new PutObjectCommand(params))
 
-    // Construct the public URL
     const region = process.env.AWS_REGION || 'us-west-1'
     const url = `https://${bucketName}.s3.${region}.amazonaws.com/${key}`
 
