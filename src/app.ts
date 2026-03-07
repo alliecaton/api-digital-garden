@@ -26,28 +26,28 @@ app.use(
   })
 )
 
-const base = (process.env.API_BASE as string) || ''
+const base = process.env.API_BASE as string
 // Redirect site-facing paths to the new website domain (preserve query)
-app.get('/posts/:slug', (req, res) => {
-  const { slug } = req.params
-  const query = req.url.includes('?') ? `?${req.url.split('?')[1]}` : ''
-  res.redirect(301, `https://its-spelled-allie.com/posts/${slug}${query}`)
-})
+// app.get('/posts/:slug', (req, res) => {
+//   const { slug } = req.params
+//   const query = req.url.includes('?') ? `?${req.url.split('?')[1]}` : ''
+//   res.redirect(301, `https://its-spelled-allie.com/posts/${slug}${query}`)
+// })
 
-app.get(`${base}/posts/:slug`, (req, res) => {
-  const { slug } = req.params
-  const query = req.url.includes('?') ? `?${req.url.split('?')[1]}` : ''
-  res.redirect(301, `https://its-spelled-allie.com/posts/${slug}${query}`)
-})
+// app.get(`${base}/posts/:slug`, (req, res) => {
+//   const { slug } = req.params
+//   const query = req.url.includes('?') ? `?${req.url.split('?')[1]}` : ''
+//   res.redirect(301, `https://its-spelled-allie.com/posts/${slug}${query}`)
+// })
 
-// Redirect RSS feed to new site feed URL
-app.get('/rss', (req, res) => {
-  res.redirect(301, 'https://its-spelled-allie.com/rss')
-})
+// // Redirect RSS feed to new site feed URL
+// app.get('/rss', (req, res) => {
+//   res.redirect(301, 'https://its-spelled-allie.com/rss')
+// })
 
-app.get(`${base}/rss`, (req, res) => {
-  res.redirect(301, 'https://its-spelled-allie.com/rss')
-})
+// app.get(`${base}/rss`, (req, res) => {
+//   res.redirect(301, 'https://its-spelled-allie.com/rss')
+// })
 
 // Routes
 app.use(base, postRouter)
