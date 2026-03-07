@@ -20,9 +20,11 @@ export const generateRss = async (
     const feed = new RSS({
       title: "Allie's Digital Garden",
       description: 'Collection of my thoughts, hobbies, and code stuff.',
-      feed_url: 'https://garden.alliecaton.com/rss',
-      site_url: 'https://garden.alliecaton.com',
+        feed_url: 'https://garden.alliecaton.com/rss',
+        site_url: 'https://its-spelled-allie.com',
     })
+
+    const siteBase = 'https://its-spelled-allie.com'
 
     const promises = allPosts.map(async (post) => {
       const parsedContent = await marked(post.content)
@@ -31,7 +33,7 @@ export const generateRss = async (
         title: post.title,
         guid: String(post.id),
         description: parsedContent,
-        url: `https://garden.alliecaton.com/posts/${post.slug}`,
+        url: `${siteBase}/posts/${post.slug}`,
         date: post.createdAt,
       }
     })
